@@ -2,4 +2,3 @@ pandas==2.2.3
 plotly==5.24.1
 pywencai==0.12.3
 streamlit==1.41.1
-nodejs-bin[cmd]
