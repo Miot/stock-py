@@ -85,3 +85,4 @@ webdriver-manager==3.8.5
 websocket-client==1.6.1
 websockets==10.4
 wsproto==1.2.0
+openpyxl==3.0.10
