@@ -122,7 +122,9 @@ def app():
             for days, group in sorted(grouped, key=lambda x: float(x[0]) if isinstance(x[0], str) else x[0], reverse=True):
                 # 根据连板天数显示不同的文本
                 display_text = "首板" if days == 1 else f"{days}连板"
-                st.markdown(f"### {display_text} ({len(group)})")
+                group_count = len(group)
+                display_count = f" ({group_count})" if group_count >= 10 else ""
+                st.markdown(f"### {display_text}{display_count}")
                 # 在显示之前删除'连板数'列
                 display_group = group.drop(columns=['连板数'])
                 st.dataframe(
