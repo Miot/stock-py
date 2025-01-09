@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 import pywencai
 
 
@@ -59,8 +60,9 @@ def app():
     st.title("涨停复盘")
 
     # Date selection
-    today = datetime.now().date()
-    default_date = today - timedelta(days=1)  # 默认显示昨天的数据
+    beijing_time = ZoneInfo('Asia/Shanghai')
+    today = datetime.now(beijing_time).date()
+    default_date = today
     selected_date = st.date_input(
         label="选择日期",
         value=default_date,
