@@ -128,7 +128,14 @@ def app():
                 st.dataframe(
                     display_group,
                     hide_index=True,
-                    use_container_width=True
+                    use_container_width=True,
+                    column_config={
+                        "涨停原因": st.column_config.TextColumn(
+                            "涨停原因",
+                            width="large",
+                            help="涨停原因类别"
+                        )
+                    }
                 )
 
             # 下载数据按钮
