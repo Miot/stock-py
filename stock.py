@@ -28,7 +28,7 @@ def analyze_limit_up_reason(df, date):
     concept_counts = reasons.value_counts().reset_index()
     # 过滤掉出现次数小于2的项
     concept_counts.columns = ['概念', '出现次数']
-    max_count = 3 if len(concept_counts) > 50 else 2
+    max_count = concept_counts['出现次数'].mode().iloc[0] + 1
     concept_counts = concept_counts[concept_counts['出现次数'] > max_count]
     return concept_counts
 
