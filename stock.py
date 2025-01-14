@@ -5,6 +5,46 @@ from zoneinfo import ZoneInfo
 from chinese_calendar import is_workday, is_holiday
 import pywencai
 
+def quick_select(arr, k):
+    if not arr or k <= 0 or k > len(arr):
+        return 0
+    
+    def partition(left, right):
+        pivot = arr[right]
+        i = left - 1
+        
+        for j in range(left, right):
+            if arr[j] >= pivot:  # 使用 >= 来实现降序排列
+                i += 1
+                arr[i], arr[j] = arr[j], arr[i]
+        
+        arr[i + 1], arr[right] = arr[right], arr[i + 1]
+        return i + 1
+    
+    def select(left, right, k):
+        if left == right:
+            return arr[left]
+        
+        pivot_idx = partition(left, right)
+        rank = pivot_idx - left + 1
+        
+        if rank == k:
+            return arr[pivot_idx]
+        elif rank > k:
+            return select(left, pivot_idx - 1, k)
+        else:
+            return select(pivot_idx + 1, right, k - rank)
+    
+    return select(0, len(arr) - 1, k)
+
+def top_k_elements(series, k):
+    if series.empty or k <= 0 or k > len(series):
+        return 0
+    
+    # 将 Series 转换为列表并使用快速选择算法
+    values = series.tolist()
+    return quick_select(values, k)
+
 
 def safe_float(value):
     """Safely convert a value to float, returning 0 if conversion fails"""
@@ -28,8 +68,8 @@ def analyze_limit_up_reason(df, date):
     concept_counts = reasons.value_counts().reset_index()
     # 过滤掉出现次数小于2的项
     concept_counts.columns = ['概念', '出现次数']
-    max_count = concept_counts['出现次数'].mode().iloc[0] + 1
-    concept_counts = concept_counts[concept_counts['出现次数'] > max_count]
+    max_count = top_k_elements(concept_counts['出现次数'], 5)
+    concept_counts = concept_counts[concept_counts['出现次数'] >= max_count]
     return concept_counts
 
 
