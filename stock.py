@@ -102,7 +102,7 @@ def calculate_metrics(limit_up_df, date):
         }
         return metrics
     except Exception as e:
-        st.error("该日期无数据")
+        st.info("该日期无数据")
         return None
     
 
@@ -111,8 +111,8 @@ def app():
     st.title("涨停复盘")
 
     # Date selection
-    beijing_time = ZoneInfo('Asia/Shanghai')
-    today = datetime.now(beijing_time).date()
+    beijing_time = datetime.now(ZoneInfo('Asia/Shanghai'))
+    today = beijing_time.date()
     default_date = today
     selected_date = st.date_input(
         label="选择日期",
@@ -120,6 +120,15 @@ def app():
         max_value=today,
         label_visibility="hidden"
     )
+
+    # 计算今天9:15的时间戳
+    today_open = datetime.combine(today, datetime.min.time().replace(hour=9, minute=15))
+    today_open = today_open.replace(tzinfo=ZoneInfo('Asia/Shanghai'))
+    
+    # 如果是当天且在9:15之前，显示暂无数据
+    if selected_date == today and beijing_time.timestamp() < today_open.timestamp():
+        st.info("暂无今日数据")
+        return
 
     if selected_date:
         # 获取数据
